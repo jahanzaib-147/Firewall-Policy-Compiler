@@ -1,0 +1,15 @@
+DEFINE hr_dept = 192.168.10.0;
+DEFINE it_dept = 192.168.20.0;
+DEFINE file_server = 10.5.5.10;
+DEFINE gateway = 192.168.1.1;
+
+# HR Access
+ALLOW TCP FROM hr_dept TO file_server PORT 21;
+BLOCK UDP FROM hr_dept TO ANY PORT 443;
+
+# IT Access
+ALLOW TCP FROM it_dept TO file_server PORT 22;
+ALLOW TCP FROM it_dept TO gateway PORT 80;
+
+# Block external ping
+BLOCK UDP FROM ANY TO gateway PORT 0;

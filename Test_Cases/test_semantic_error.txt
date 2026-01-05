@@ -1,0 +1,4 @@
+DEFINE frontend = 10.0.0.5;
+
+# Semantic Error: 'database' is undefined
+ALLOW TCP FROM frontend TO database PORT 3306;

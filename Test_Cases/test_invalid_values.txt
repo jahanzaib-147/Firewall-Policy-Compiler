@@ -1,0 +1,5 @@
+# Error 1: Port number is too high (Max is 65535)
+ALLOW TCP FROM ANY TO ANY PORT 99999;
+
+# Error 2: IP address has octet > 255
+DEFINE bad_ip = 192.168.1.300;

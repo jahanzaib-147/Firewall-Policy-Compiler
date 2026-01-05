@@ -1,0 +1,9 @@
+DEFINE office_net = 192.168.1.0;
+DEFINE web_server = 10.0.0.50;
+
+# Allow internal employees to access the web server
+ALLOW TCP FROM office_net TO web_server PORT 80;
+ALLOW TCP FROM office_net TO web_server PORT 443;
+
+# Allow DNS queries from anywhere
+ALLOW UDP FROM ANY TO web_server PORT 53;

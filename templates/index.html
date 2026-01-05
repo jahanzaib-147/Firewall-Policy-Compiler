@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Firewall Compiler Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel: #1e293b;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --success: #4ade80;
+            --error: #f472b6;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        header { 
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
+            padding: 15px 30px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .brand { font-size: 1.4rem; font-weight: 800; color: var(--text); }
+        .brand span { color: var(--accent); }
+
+        .container { display: flex; flex: 1; height: calc(100vh - 70px); }
+
+        .editor-pane { 
+            width: 35%; display: flex; flex-direction: column; 
+            background: rgba(30, 41, 59, 0.5); border-right: 1px solid var(--border); 
+        }
+        
+        .toolbar { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        
+        input[type="file"] { display: none; }
+        .file-label {
+            background: var(--panel); border: 1px solid var(--border);
+            padding: 8px 15px; border-radius: 6px; font-size: 0.85rem;
+            cursor: pointer; color: var(--text-muted);
+        }
+        .file-label:hover { border-color: var(--accent); color: var(--accent); }
+        
+        textarea {
+            flex: 1; background: transparent; border: none; padding: 20px;
+            color: #cbd5e1; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+            resize: none; outline: none;
+        }
+
+        .compile-btn {
+            width: 100%; padding: 15px; border: none; background: var(--accent); color: #0f172a;
+            font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .compile-btn:hover { background: #7dd3fc; }
+
+        .output-pane { flex: 1; padding: 30px; overflow-y: auto; }
+
+        .card {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(5px);
+            border: 1px solid var(--border); border-radius: 12px;
+            margin-bottom: 25px; overflow: hidden;
+        }
+        
+        .card-header {
+            background: rgba(15, 23, 42, 0.5); padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted); display: flex; align-items: center; gap: 10px;
+        }
+
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+        .dot.blue { background: var(--accent); }
+        .dot.green { background: var(--success); }
+        .dot.purple { background: #c084fc; }
+
+        .card-body { padding: 20px; }
+
+        /* Tables & Logs */
+        .token-table, .symbol-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .token-table th, .symbol-table th { text-align: left; color: var(--accent); padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+        .token-table td, .symbol-table td { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+        .log-entry { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; padding: 5px 0; color: var(--success); }
+        .mermaid { display: flex; justify-content: center; }
+        
+        .error-msg { background: rgba(244, 114, 182, 0.1); border: 1px solid var(--error); color: var(--error); padding: 20px; border-radius: 8px; font-weight: bold; }
+    </style>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'dark', flowchart: { curve: 'basis' } });
+        function updateFileName(input) {
+            if(input.files.length > 0) document.getElementById('file-label-text').innerText = "📄 " + input.files[0].name;
+        }
+    </script>
+</head>
+<body>
+
+<header>
+    <div class="brand">⚡ FIREWALL <span>COMPILER</span></div>
+</header>
+
+<form class="container" method="POST" action="/" enctype="multipart/form-data">
+    <div class="editor-pane">
+        <div class="toolbar">
+            <span style="color:var(--text-muted); font-weight:bold; font-size:0.8rem;">INPUT SOURCE</span>
+            <label for="file_upload" class="file-label" id="file-label-text">📂 Upload .txt</label>
+            <input type="file" name="file_upload" id="file_upload" accept=".txt,.frl" onchange="updateFileName(this)">
+        </div>
+        <textarea name="source_code" spellcheck="false">{{ code }}</textarea>
+        <button type="submit" class="compile-btn">Compile & Run ▶</button>
+    </div>
+
+    <div class="output-pane">
+        {% if result %}
+            {% if result.error %}
+                <div class="error-msg">❌ {{ result.error }}</div>
+            {% else %}
+
+                <div class="card">
+                    <div class="card-header"><div class="dot purple"></div> Phase 1: Lexical Analysis (Tokens)</div>
+                    <div class="card-body">
+                        <table class="token-table">
+                            <thead><tr><th>Line</th><th>Token Type</th><th>Value</th></tr></thead>
+                            <tbody>
+                                {% for token in result.tokens %}
+                                <tr>
+                                    <td>{{ token.line }}</td>
+                                    <td>{{ token.type }}</td>
+                                    <td>{{ token.value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><div class="dot blue"></div> Phase 2: Syntax Analysis (AST Tree)</div>
+                    <div class="card-body mermaid">
+                        graph TD
+                        classDef root fill:#38bdf8,color:#0f172a,stroke:none;
+                        classDef decl fill:#4ade80,color:#0f172a,stroke:none;
+                        classDef rule fill:#fb923c,color:#0f172a,stroke:none;
+                        classDef leaf fill:#94a3b8,color:#0f172a,stroke:none;
+                        {{ result.graph_data|safe }}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><div class="dot green"></div> Phase 3: Semantic Analysis & Symbols</div>
+                    <div class="card-body">
+                        {% for log in result.logs %}
+                            <div class="log-entry">✔ {{ log }}</div>
+                        {% endfor %}
+                        <br>
+                        <table class="symbol-table">
+                            <thead><tr><th>Variable</th><th>Type</th><th>Value</th></tr></thead>
+                            <tbody>
+                                {% for name, data in result.symbols.items() %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ data.type }}</td>
+                                    <td>{{ data.value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            {% endif %}
+        {% else %}
+            <div style="text-align: center; margin-top: 100px; color: var(--text-muted);">
+                <h2>Waiting for Input...</h2>
+                <p>Type code on the left or upload a file.</p>
+            </div>
+        {% endif %}
+    </div>
+</form>
+
+</body>
+</html>
