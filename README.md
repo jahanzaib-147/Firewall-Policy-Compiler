@@ -17,7 +17,6 @@ A **Domain-Specific Language (DSL)** compiler designed to simplify, validate, an
 - [Installation & Setup](#-installation--setup)
 - [How to Use](#-how-to-use)
 - [Sample Code](#-sample-code)
-- [Screenshots](#-screenshots)
 - [Author](#-author)
 - [License](#-license)
 
@@ -137,8 +136,6 @@ BLOCK UDP FROM ANY TO office_network PORT 53;
 * 🎓 BSCS Computer Science Student
 * 💻 Focus areas: Network Security, and Web Development.
 
-). 
--->
 
 ---
 
