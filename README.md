@@ -1,42 +1,35 @@
-Firewall Policy Compiler 🛡️
-About The Project
-The Firewall Policy Compiler is a domain-specific language (DSL) tool designed to simplify network security configuration. It allows network administrators to write firewall rules in a high-level, human-readable format (e.g., ALLOW TCP FROM office_pc TO server PORT 80) and compiles them into a verified, logical structure.
+# 🔥 Firewall Policy Compiler
 
-Unlike traditional command-line tools that are prone to syntax errors, this compiler visualizes the entire parsing process. It implements the three core phases of compiler construction—Lexical Analysis, Syntax Analysis, and Semantic Analysis—providing immediate feedback, error detection, and a dynamic Abstract Syntax Tree (AST) visualization.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Flask](https://img.shields.io/badge/Flask-2.0-green)
+![Status](https://img.shields.io/badge/Status-Completed-success)
 
-Key Features
-Custom DSL: Write clean, readable rules using keywords like DEFINE, ALLOW, BLOCK, and any.
+A **Domain-Specific Language (DSL)** compiler designed to validate and visualize network firewall rules. This project implements the core phases of compiler construction—Lexical, Syntax, and Semantic Analysis—wrapped in a modern web interface.
 
-3-Phase Compilation:
+## 🚀 Features
 
-Lexer: Tokenizes source code and identifies invalid characters.
+- **Custom DSL:** Write human-readable rules (e.g., `ALLOW TCP FROM office TO server PORT 80`).
+- **3-Phase Compilation:**
+  - **Lexical Analysis:** Tokenizes input and handles errors.
+  - **Syntax Analysis:** Builds an Abstract Syntax Tree (AST) using Recursive Descent Parsing.
+  - **Semantic Analysis:** Validates logic, scopes, and types (IPs, Ports).
+- **Visualizations:** Auto-generates interactive AST diagrams using **Mermaid.js**.
+- **Web UI:** Modern, Dark-Mode interface built with **Flask** and **CSS Glassmorphism**.
 
-Parser: Validates grammar and builds a hierarchical AST.
+## 🛠️ Technology Stack
 
-Semantic Analyzer: Checks for logical errors (e.g., undefined variables, invalid IP ranges, port limits).
+- **Backend:** Python (Flask)
+- **Frontend:** HTML5, CSS3, JavaScript
+- **Visualization:** Mermaid.js
+- **Concepts:** Regex, Context-Free Grammar (CFG), Symbol Tables
 
-Visual AST: Automatically draws the Syntax Tree using Mermaid.js, making the parsing logic transparent.
+## 📸 Screenshots
 
-Symbol Table: Tracks variable definitions and types in real-time.
+*(You can drag and drop screenshots of your UI here later)*
 
-Web Interface: A modern, dark-themed UI built with Flask for an IDE-like experience.
+## 📦 Installation & Run
 
-Tech Stack
-Backend: Python 3 (Flask)
-
-Frontend: HTML5, CSS3 (Glassmorphism UI), JavaScript
-
-Visualization: Mermaid.js (for Graphing/Trees)
-
-Compiler Concepts: Regex, Recursive Descent Parsing, Context-Free Grammar (CFG)
-
-How It Works
-Input: User types rules or uploads a .txt file.
-
-Tokenization: The Lexer breaks the text into a stream of tokens (Keywords, IPs, Numbers).
-
-Parsing: The Parser arranges tokens into a tree structure based on the grammar rules.
-
-Analysis: The Semantic Analyzer walks the tree to ensure the rules make logical sense (e.g., ensuring ports are between 0-65535).
-
-Output: The UI displays the Token Stream, the Visual Syntax Tree, and the Final Symbol Table.
+1. **Clone the Repo**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/Firewall-Policy-Compiler.git](https://github.com/YOUR_USERNAME/Firewall-Policy-Compiler.git)
+   cd Firewall-Policy-Compiler
